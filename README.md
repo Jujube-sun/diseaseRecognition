@@ -7,5 +7,5 @@ A new lightweight cnn based on GoogLeNet
 ##Data
 PlantVillage is available at https://pan.baidu.com/s/10xYNi5gecr6Cxj4wpFUTWw
 Password:x727
-Self-built solanaceae disease data set is available at https://pan.baidu.com/s/17_g2gkrZF4D_SVMew-acwQ
+Self-built solanaceae disease data set is available at https://pan.baidu.com/s/17_g2gkrZF4D_SVMew-acwQ  
 Password:rdwg
