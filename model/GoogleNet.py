@@ -5,10 +5,7 @@ from keras.models import Model
 def GoogLeNet_build(inputShape, classes):
     '''
     GoogLeNet网络
-    INPUT  -> 输入数据格式(224, 224, 3), 待分类数(1000)
     '''
-    #定义inception模块，已采取的措施在inceptionv1基础上增加了归一化，
-    #没有采取的措施是在论文中3*3，5*5的之前的1*1以及maxpooling后面的1*1现已加上
     def Inception_block(inputs, num_filter):
         branch1x1 = Conv2D(num_filter, kernel_size=(1, 1), activation='relu', strides=(1, 1), padding='same')(inputs)
         #branch1x1 = BatchNormalization(axis=3)(branch1x1)
@@ -56,7 +53,7 @@ def GoogLeNet_build(inputShape, classes):
     x = Dropout(0.4)(x)
     #分类器
     x = Flatten()(x)  # 特征扁平化
-    x = Dense(classes,activation='softmax')(x)  # 全连接层，进行多分类,形成最终的10分类
+    x = Dense(classes,activation='softmax')(x)
 
     model = Model(inputs, x)
     #model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
