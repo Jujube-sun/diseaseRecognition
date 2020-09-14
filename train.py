@@ -5,17 +5,16 @@ import math
 from model.GoogleNet import *
 from model.MobileNetV2 import *
 from model.ShuffleNetV2 import *
-from model.LightGoogLeNet import *
+from model.SEInception import *
+from model.mobilenet_v3_large import *
 from keras import optimizers
 from keras import losses
 import tensorflow as tf
+from dataProcess import *
 from utils import *
 import keras.backend.tensorflow_backend as KTF
 from keras import backend as K
-# #不满显存, 自适应分配
-# config.gpu_options.allow_growth=True
-# sess = tf.Session(config=config)
-# KTF.set_session(sess)
+
 
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True
@@ -28,17 +27,15 @@ TEST_IMAGES_DIR = './data/test'
 JSON_TRAIN = './data/train_annotation.json'
 
 JSON_VAL = './data/test_annotation.json'
-#plant 用的256
+#归一化尺寸
 norm_size=224
-#38
-class_num=38
+#分类数量
+class_num=5
 # 一次的训练集大小
 batch_size = 16
 epoch=40
 input_shape=(224,224,3)
-#input_shape=(256,256,3)
-#内存使用情况
-#info=psutil.virtual_memory()
+
 if __name__ == "__main__":
     # 模型保存的位置
     log_dir = "./logs/"
@@ -47,7 +44,8 @@ if __name__ == "__main__":
     #model=GoogLeNet_build(inputShape=input_shape,classes=class_num)
 
     #MyNet
-    model=LightGoogLeNet_build(input_shape,class_num)
+    model=SEInception_build(input_shape,class_num)
+    
     #mobileNetV2
     #model=MobileNetv2(input_shape=input_shape,k=class_num)
 
@@ -57,6 +55,8 @@ if __name__ == "__main__":
     #shuffleNetV2
     #model=ShuffleNetV2(input_shape=input_shape,classes=class_num)
 
+    #mobileNetV3_large
+    #model=MobileNetV3_Large.build(MobileNetV3_Large(shape=input_shape,n_class=class_num))
 
     # filename：保存路径保存在机械硬盘
     # monitor：需要监视的值
@@ -103,11 +103,12 @@ if __name__ == "__main__":
     tensorboard = TensorBoard(log_dir='logs/tensorboard')
     callback_lists=[tensorboard,reduce_lr,early_stopping]
 
-
+    #constructed dataset
     train_image_path, train_labels = process_annotation('./data/train_annotation_NoLeaf.json',
         './data/train',class_num)
     test_image_path, test_labels = process_annotation('./data/test_annotation_NoLeaf.json',
         './data/test', class_num)
+    #plantvillage
     # train_image_path, train_labels = process_annotation_plant('./data/plantVillageData/train_annotation_plant.json',
     #     './data/plantVillageData/plantVillage',class_num)
     # test_image_path, test_labels = process_annotation_plant('./data/plantVillageData/valid_annotation_plant.json',

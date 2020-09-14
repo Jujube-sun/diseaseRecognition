@@ -21,10 +21,6 @@ from sklearn.metrics import classification_report
 
 
 
-# #GPU:2080需要，1080ti不用
-# config = tf.ConfigProto()
-# config.gpu_options.allow_growth = True
-# K.tensorflow_backend.set_session(tf.Session(config=config))
 
 def rename():
     #注意路径用这个/
@@ -200,7 +196,7 @@ def setPlantJson(rootdir,savePath):
     with open(testfilename, 'w') as file_obj:
         json.dump(testannotation, file_obj)
 
-
+#单张图片预测结果
 def predictSinglePhoto(label_file,image_id,image_path,model_path):
     norm_size=224
     disease_class=0
@@ -211,7 +207,7 @@ def predictSinglePhoto(label_file,image_id,image_path,model_path):
     # 读取模型和标签
     print("------读取模型和标签------")
     model = load_model(model_path)
-    #mobileNet.定义relu6
+    #mobileNet系列.定义relu6
     #model=load_model(model_path,custom_objects={'relu6': relu6})
 
     with open(label_file) as file:
@@ -249,7 +245,7 @@ def predictSinglePhoto(label_file,image_id,image_path,model_path):
     cv2.imshow("Image", output)
     cv2.waitKey(0)
 
-
+#输出整体结果
 def preClassAcc(model_path,JSON_VAL,TEST_IMAGES_DIR,norsize,class_num):
     model=load_model(model_path)
     #mobileNet.定义relu6
@@ -276,12 +272,44 @@ def preClassAcc(model_path,JSON_VAL,TEST_IMAGES_DIR,norsize,class_num):
     return result
 
 
-# if __name__ =='__main__':
-#     label_file="./data/test_annotation_NoLeaf.json"
-#     image_id="CUW36.JPG"
-#     image_path="./data/test/PowderyMildew/"+image_id
-#     model_path="./logs/ShuffleNetV1_Mine.h5"
-#     predictSinglePhoto(label_file=label_file,image_id=image_id,
-#                        image_path=image_path,model_path=model_path)
 
+#读取tensorboardcsv数据绘制曲线图
+def readcsv(files):
+    csvfile = open(files, 'r')
+    plots = csv.reader(csvfile, delimiter=',')
+    x = []
+    y = []
+    for row in plots:
+        y.append((row[2]))
+        x.append((row[1]))
+    return x, y
 
+#输出曲线图
+def plotResult():
+    mpl.rcParams['font.family'] = 'sans-serif'
+    mpl.rcParams['font.sans-serif'] = 'NSimSun,Times New Roman'
+
+    x1, y1 = readcsv("./result/inModel/train/acc/train_Base_acc.csv")
+    plt.plot(x1, y1, color="purple", label='Base')
+
+    x2, y2 = readcsv("./result/inModel/train/acc/train_Base_BN_acc.csv")
+    plt.plot(x2, y2, color='blue', label='Base_BN')
+
+    x3, y3 = readcsv("./result/inModel/train/acc/train_Base_Multi_acc.csv")
+    plt.plot(x3, y3, color='orange', label='Base_Multi')
+
+    x4, y4 = readcsv("./result/inModel/train/acc/train_Base_Multi_BN_acc.csv")
+    plt.plot(x4, y4, color='green', label='Base_Multi_BN')
+
+    x5, y5 = readcsv("./result/inModel/train/acc/train_MyNet_acc.csv")
+    plt.plot(x5, y5, color='red', label='Base_Multi_BN_SE')
+
+    plt.xticks(fontsize=15)
+    plt.yticks(fontsize=15)
+
+    plt.ylim(0, 1.8)
+    plt.xlim(0, 30)
+    plt.xlabel('Steps', fontsize=15)
+    plt.ylabel('Loss', fontsize=15)
+    plt.legend(fontsize=16)
+    plt.show()
