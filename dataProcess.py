@@ -9,7 +9,6 @@ import random
 import os
 
 #获取图片的路径和标签，用于分批次训练，载入内存
-#[./data/test/Healthy/bea07a8790160e19f09cd08a10d27ac3.jpg],[5]
 def process_annotation(anno_file, dataset_dir,class_num):
     #需要传入标注文件所在路径，以及训练/测试图片所在路径
     with open(anno_file) as file:
