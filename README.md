@@ -1,5 +1,5 @@
 # Disease identification of solanaceae
-A solanaceae disease recognition model based on SE-Inception.The model is experimented on the our constructed dataset and PlantVillage dataset<br>
+[A solanaceae disease recognition model based on SE-Inception.](https://www.sciencedirect.com/science/article/pii/S0168169920313454)The model is experimented on the our constructed dataset and PlantVillage dataset<br>
 ## Environment
 - python 3.6
 - tensorflow-gpu 1.13.1
